@@ -57,7 +57,7 @@ export interface SignInOptions extends Record<string, unknown> {
   callbackUrl?: string
   /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option) */
   redirect?: boolean
-  config: AuthClientConfig
+  config?: AuthClientConfig
 }
 
 export interface SignInResponse {
@@ -105,7 +105,7 @@ export interface SignOutParams<R extends boolean = true> {
   callbackUrl?: string
   /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
   redirect?: R
-  config: AuthClientConfig
+  config?: AuthClientConfig
 }
 
 /**
