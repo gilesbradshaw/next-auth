@@ -1,7 +1,7 @@
 import { auth, unstable_update as update } from "auth"
 import { auth as auth2, unstable_update as update2 } from "auth-2"
 
-import { SessionProvider } from "next-auth/react"
+import { SessionProvider, SessionsProvider } from "next-auth/react"
 import Client from "./client"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
@@ -43,13 +43,19 @@ export default async function Page() {
        NOTE: The `auth()` result is not run through the `session` callback, be careful passing down data
        to a client component, this will be exposed via the /api/auth/session endpoint
       */}
-      <SessionProvider basePath="/auth">
-        <Client />
-      </SessionProvider>
-      <SessionProvider basePath="/auth-2">
-        <Client />
-      </SessionProvider>
-
+      <SessionsProvider sessions={
+        [
+          { name: 'auth', basePath: "/auth", session },
+          { name: 'auth-2', basePath: "/auth-2", session: session2 }
+        ]
+      }>
+        <SessionProvider basePath="/auth">
+          <Client />
+        </SessionProvider>
+        <SessionProvider basePath="/auth-2">
+          <Client />
+        </SessionProvider>
+      </SessionsProvider>
     </div>
   )
 }

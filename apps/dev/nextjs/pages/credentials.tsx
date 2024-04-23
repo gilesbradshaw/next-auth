@@ -17,7 +17,9 @@ export default function Page() {
         <button onClick={() => signOut({ config })}>Logout</button>
         <br />
         <span className="spacing">No redirect: </span>
-        <button onClick={() => signOut({ config, redirect: false }).then(setResponse)}>
+        <button
+          onClick={() => signOut({ config, redirect: false }).then(setResponse)}
+        >
           Logout
         </button>
         <br />
@@ -33,16 +35,19 @@ export default function Page() {
     <>
       <h1>Test different flows for Credentials login</h1>
       <span className="spacing">Default: </span>
-      <button onClick={() => signIn({ config, password: "password" }, "credentials")}>
+      <button
+        onClick={() => signIn({ config, password: "password" }, "credentials")}
+      >
         Login
       </button>
       <br />
       <span className="spacing">No redirect: </span>
       <button
         onClick={() =>
-          signIn({ config, redirect: false, password: "password" }, "credentials").then(
-            setResponse
-          )
+          signIn(
+            { config, redirect: false, password: "password" },
+            "credentials"
+          ).then(setResponse)
         }
       >
         Login

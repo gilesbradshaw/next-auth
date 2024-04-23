@@ -1,5 +1,10 @@
 import { auth, signIn, signOut, unstable_update as update } from "auth"
-import { auth as auth2, signIn as signIn2, signOut as signOut2, unstable_update as update2 } from "auth-2"
+import {
+  auth as auth2,
+  signIn as signIn2,
+  signOut as signOut2,
+  unstable_update as update2,
+} from "auth-2"
 import Footer from "components/footer"
 import { Header } from "components/header"
 import styles from "components/header.module.css"
@@ -19,10 +24,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 }
 
 export async function AppHeader() {
-  const [session, session2] = await Promise.all([
-    auth(),
-    auth2(),
-  ]);
+  const [session, session2] = await Promise.all([auth(), auth2()])
   return (
     <>
       <Header
@@ -55,7 +57,7 @@ export async function AppHeader() {
               >
                 <button className={styles.buttonPrimary}>Sign out</button>
               </form>
-            )
+            ),
           },
           {
             session: session2,
@@ -85,11 +87,11 @@ export async function AppHeader() {
               >
                 <button className={styles.buttonPrimary}>Sign out</button>
               </form>
-            )
-          }
+            ),
+          },
         ]}
         sign={(func) => async () => {
-          'use server';
+          "use server"
           try {
             await func()
           } catch (error) {
@@ -98,7 +100,7 @@ export async function AppHeader() {
             }
             throw error
           }
-        }}      
+        }}
       />
     </>
   )

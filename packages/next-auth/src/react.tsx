@@ -29,6 +29,7 @@ import type {
   ClientSafeProvider,
   LiteralUnion,
   SessionProviderProps,
+  SessionsProviderProps,
   SignIn,
   SignInAuthorizationParams,
   SignInOptions,
@@ -51,7 +52,10 @@ export type {
   SignOutResponse,
 }
 
-export { SessionProviderProps }
+export {
+  SessionProviderProps,
+  SessionsProviderProps,
+}
 // This behaviour mirrors the default behaviour for getting the site name that
 // happens server side in server/index.js
 // 1. An empty value is legitimate when the code is being invoked client side as
@@ -63,15 +67,15 @@ export const __NEXTAUTH_: AuthClientConfig = {
   basePath: parseUrl(process.env.NEXTAUTH_URL).path,
   baseUrlServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL ??
-      process.env.NEXTAUTH_URL ??
-      process.env.VERCEL_URL
+    process.env.NEXTAUTH_URL ??
+    process.env.VERCEL_URL
   ).origin,
   basePathServer: parseUrl(
     process.env.NEXTAUTH_URL_INTERNAL ?? process.env.NEXTAUTH_URL
   ).path,
   _lastSync: 0,
   _session: undefined,
-  _getSession: () => {},
+  _getSession: () => { },
 }
 
 function broadcast() {
@@ -79,9 +83,9 @@ function broadcast() {
     return new BroadcastChannel("next-auth")
   }
   return {
-    postMessage: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
+    postMessage: () => { },
+    addEventListener: () => { },
+    removeEventListener: () => { },
   }
 }
 
@@ -95,45 +99,45 @@ const logger: LoggerInstance = {
 /** @todo Document */
 export type UpdateSession = (data?: any) => Promise<Session | null>
 
-
 /**
  * useSession() returns an object containing three things: a method called {@link UpdateSession|update}, `data` and `status`.
  */
 export type SessionContextValue<R extends boolean = false> = R extends true
   ?
-      | {
-        update: UpdateSession;
-        data: Session;
-        status: "authenticated";
-        config: AuthClientConfig;
-        signIn: SignIn;
-        signOut: SignOut;
-      }
-      | {
-        update: UpdateSession;
-        data: null;
-        status: "loading";
-        config: AuthClientConfig;
-        signIn: SignIn;
-        signOut: SignOut;
-      }
+  | {
+    update: UpdateSession
+    data: Session
+    status: "authenticated"
+    config: AuthClientConfig
+    signIn: SignIn
+    signOut: SignOut
+  }
+  | {
+    update: UpdateSession
+    data: null
+    status: "loading"
+    config: AuthClientConfig
+    signIn: SignIn
+    signOut: SignOut
+  }
   :
-      | {
-        update: UpdateSession;
-        data: Session;
-        status: "authenticated";
-        config: AuthClientConfig;
-        signIn: SignIn;
-        signOut: SignOut;
-      }
-      | {
-          update: UpdateSession
-          data: null
-          status: "unauthenticated" | "loading",
-          config: AuthClientConfig;
-          signIn: SignIn;
-          signOut: SignOut;
-        }
+  | {
+    update: UpdateSession
+    data: Session
+    status: "authenticated"
+    config: AuthClientConfig
+    signIn: SignIn
+    signOut: SignOut
+  }
+  | {
+    update: UpdateSession
+    data: null
+    status: "unauthenticated" | "loading"
+    config: AuthClientConfig
+    signIn: SignIn
+    signOut: SignOut
+  }
+
 
 export const SessionContext = React.createContext?.<
   SessionContextValue | undefined
@@ -167,7 +171,6 @@ export function useSession<R extends boolean>(
 
   React.useEffect(() => {
     if (requiredAndNotLoading) {
-      
       const url = `${value.config.basePath}/signin?${new URLSearchParams({
         error: "SessionRequired",
         callbackUrl: window.location.href,
@@ -194,7 +197,7 @@ export function useSession<R extends boolean>(
 export interface GetSessionParams {
   event?: "storage" | "timer" | "hidden" | string
   triggerEvent?: boolean
-  broadcast?: boolean,
+  broadcast?: boolean
   config: AuthClientConfig
 }
 
@@ -242,18 +245,17 @@ export async function getProviders(config: AuthClientConfig) {
   return fetchData<ProvidersType>("providers", config, logger)
 }
 
-const sin =  (config: AuthClientConfig): SignIn => (
-  options,
-  provider,
-  authorizationParams
-) => signIn(
-  {
-    ...options,
-    config,
-  },
-  provider,
-  authorizationParams
-)
+const sin =
+  (config: AuthClientConfig): SignIn =>
+    (options, provider, authorizationParams) =>
+      signIn(
+        {
+          ...options,
+          config,
+        },
+        provider,
+        authorizationParams
+      )
 /**
  * Initiate a signin flow or send the user to the signin page listing all possible providers.
  * Handles CSRF protection.
@@ -264,9 +266,9 @@ export const signIn: SignIn = async (
   authorizationParams
 ) => {
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
-  const baseUrl = apiBaseUrl(options.config);
-  const providers = await getProviders(options.config);
-    
+  const baseUrl = apiBaseUrl(options.config)
+  const providers = await getProviders(options.config)
+
   if (!providers) {
     window.location.href = `${baseUrl}/error`
     return
@@ -283,9 +285,8 @@ export const signIn: SignIn = async (
   const isEmail = providers[provider].type === "email"
   const isSupportingReturn = isCredentials || isEmail
 
-  const signInUrl = `${baseUrl}/${
-    isCredentials ? "callback" : "signin"
-  }/${provider}`
+  const signInUrl = `${baseUrl}/${isCredentials ? "callback" : "signin"
+    }/${provider}`
 
   const csrfToken = await getCsrfToken(options.config)
   const res = await fetch(
@@ -330,25 +331,22 @@ export const signIn: SignIn = async (
   } as any
 }
 
-const sout =  (config: AuthClientConfig): SignOut => (
-  options,
-) => signOut(
-  {
-    ...options,
-    config,
-  },
-)
+const sout =
+  (config: AuthClientConfig): SignOut =>
+    (options) =>
+      signOut({
+        ...options,
+        config,
+      })
 
 /**
  * Initiate a signout, by destroying the current session.
  * Handles CSRF protection.
  */
-export const signOut: SignOut = async (
-  options,
-) => {
+export const signOut: SignOut = async (options) => {
   const { callbackUrl = window.location.href } = options ?? {}
-  
-  const baseUrl = apiBaseUrl(options.config);
+
+  const baseUrl = apiBaseUrl(options.config)
   const csrfToken = await getCsrfToken(options.config)
   const res = await fetch(`${baseUrl}/signout`, {
     method: "post",
@@ -373,7 +371,6 @@ export const signOut: SignOut = async (
   if (options?.config) {
     await options.config._getSession({ event: "storage" })
   }
-  
 
   return data
 }
@@ -401,7 +398,7 @@ export function SessionProvider(props: SessionProviderProps) {
     basePathServer: "",
     _lastSync: 0,
     _session: undefined,
-    _getSession: () => {},
+    _getSession: () => { },
   }
 
   /**
@@ -409,25 +406,26 @@ export function SessionProvider(props: SessionProviderProps) {
    * but it failed, but we still treat it as a valid initial value.
    */
   const hasInitialSession = props.session !== undefined
-  const [lastSync, setLastSync] = React.useState(hasInitialSession ? now() : 0);
-  
+  const [lastSync, setLastSync] = React.useState(hasInitialSession ? now() : 0)
 
-  const [session, setSession] = React.useState(props.session);
+  const [session, setSession] = React.useState(props.session)
 
   /** If session was passed, initialize as not loading */
   const [loading, setLoading] = React.useState(!hasInitialSession)
 
-  const _getSession = async (p?:  { event: string | undefined } | undefined) => {
+  const _getSession = async (p?: { event: string | undefined } | undefined) => {
     try {
       const storageEvent = p?.event === "storage"
       // We should always update if we don't have a client session yet
       // or if there are events from other tabs/windows
       if (storageEvent || session === undefined) {
         setLastSync(now())
-        setSession(await getSession({
-          broadcast: !storageEvent,
-          config,
-        }))
+        setSession(
+          await getSession({
+            broadcast: !storageEvent,
+            config,
+          })
+        )
         return
       }
 
@@ -449,9 +447,11 @@ export function SessionProvider(props: SessionProviderProps) {
 
       // An event or session staleness occurred, update the client session.
       setLastSync(now())
-      setSession( await getSession({
-        config,
-      }))
+      setSession(
+        await getSession({
+          config,
+        })
+      )
     } catch (error) {
       logger.error(
         new ClientSessionError((error as Error).message, error as any)
@@ -550,4 +550,283 @@ export function SessionProvider(props: SessionProviderProps) {
     // @ts-expect-error
     <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
   )
+}
+
+export type SessionsContextValue<R extends boolean = false> = R extends true
+  ?
+  | {
+    name: string,
+    update: UpdateSession
+    data: Session
+    status: "authenticated"
+    signIn: SignIn
+    signOut: SignOut
+  }
+  | {
+    name: string
+    update: UpdateSession
+    data: null
+    status: "loading"
+    signIn: SignIn
+    signOut: SignOut
+  }
+  :
+  | {
+    name: string
+    update: UpdateSession
+    data: Session
+    status: "authenticated"
+    signIn: SignIn
+    signOut: SignOut
+  }
+  | {
+    name: string
+    update: UpdateSession
+    data: null
+    status: "unauthenticated" | "loading"
+    signIn: SignIn
+    signOut: SignOut
+  }
+
+
+export const SessionsContext = React.createContext?.<
+  SessionsContextValue[] | undefined
+>(undefined)
+
+
+
+/**
+ * [React Context](https://react.dev/learn/passing-data-deeply-with-context) provider to wrap the app (`pages/`) to make session data available anywhere.
+ *
+ * When used, the session state is automatically synchronized across all open tabs/windows and they are all updated whenever they gain or lose focus
+ * or the state changes (e.g. a user signs in or out) when {@link SessionProviderProps.refetchOnWindowFocus} is `true`.
+ *
+ * :::info
+ * You will likely not need `SessionProvider` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * :::
+ */
+export function SessionsProvider(props: SessionsProviderProps) {
+  if (!SessionsContext) {
+    throw new Error("React Context is unavailable in Server Components")
+  }
+
+  const { children, sessions, refetchInterval, refetchWhenOffline } = props
+  const [configs, setConfigs] = React.useState(
+    sessions.map(
+      ({
+        basePath,
+        name,
+        session,
+      }) => (
+        {
+          name,
+          baseUrl: "",
+          basePath: basePath || "",
+          baseUrlServer: "",
+          basePathServer: "",
+          _lastSync: session ? now() : 0,
+          _session: session,
+          _getSession: () => { },
+          loading: !!session,
+        }
+      )),
+  );
+
+
+  const _getSessions = async (p?: { event: string | undefined } | undefined) => {
+    const storageEvent = p?.event === "storage"
+    const sessions = await Promise.all(
+      configs.map(
+        ({
+          _session,
+          ...config
+        }) => {
+          // think about errors!!
+          if (storageEvent || !_session) {
+            return getSession({
+              broadcast: !storageEvent,
+              config,
+            }).then(
+              (session) => ({
+                ...config,
+                _session: session,
+                loading: false,
+                _lastSync: now(),
+              })
+            )
+          }
+          if (!p?.event || !_session || now() < config._lastSync) {
+            return {
+              ...config,
+              _session,
+            }
+          }
+          if (p?.event === "poll" && !_session) {
+            return {
+              ...config,
+              _session,
+            }
+          }
+          return getSession({
+            config,
+          }).then(
+            (session) => ({
+              ...config,
+              _session: session,
+              loading: false,
+              _lastSync: now(),
+            })
+          )
+        }
+      ),
+    );
+    setConfigs(sessions);
+  }
+
+  React.useEffect(() => {
+    _getSessions()
+  }, [])
+
+  React.useEffect(() => {
+    const handle = () => _getSessions({ event: "storage" })
+    // Listen for storage events and update session if event fired from
+    // another window (but suppress firing another event to avoid a loop)
+    // Fetch new session data but tell it to not to fire another event to
+    // avoid an inf__nextauthinite loop.
+    // Note: We could pass session data through and do something like
+    // `setData(message.data)` but that can cause problems depending
+    // on how the session object is being used in the client; it is
+    // more robust to have each window/tab fetch it's own copy of the
+    // session object rather than share it across instances.
+    broadcast().addEventListener("message", handle)
+    return () => broadcast().removeEventListener("message", handle)
+  }, [])
+
+  React.useEffect(() => {
+    const { refetchOnWindowFocus = true } = props
+    // Listen for when the page is visible, if the user switches tabs
+    // and makes our tab visible again, re-fetch the session, but only if
+    // this feature is not disabled.
+    const visibilityHandler = () => {
+      if (refetchOnWindowFocus && document.visibilityState === "visible")
+        _getSessions({ event: "visibilitychange" })
+    }
+    document.addEventListener("visibilitychange", visibilityHandler, false)
+    return () =>
+      document.removeEventListener("visibilitychange", visibilityHandler, false)
+  }, [props.refetchOnWindowFocus])
+
+  const isOnline = useOnline()
+  // TODO: Flip this behavior in next major version
+  const shouldRefetch = refetchWhenOffline !== false || isOnline
+
+  React.useEffect(() => {
+    if (refetchInterval && shouldRefetch) {
+      const refetchIntervalTimer = setInterval(() => {
+        _getSessions({ event: "poll" })
+
+      }, refetchInterval * 1000)
+      return () => clearInterval(refetchIntervalTimer)
+    }
+  }, [refetchInterval, shouldRefetch])
+
+  const value: any[] = configs.map(
+    ({
+      _session,
+      loading,
+      ...config
+    }) =>
+      React.useMemo(
+        () => ({
+          config,
+          name: config.name,
+          data: _session,
+          status: loading
+            ? "loading"
+            : _session
+              ? "authenticated"
+              : "unauthenticated",
+          signIn: sin(config),
+          signOut: sout(config),
+          async update(data: any) {
+            if (loading || !_session) return
+
+            //setLoading(true)
+            const newSession = await fetchData<Session>(
+              "session",
+              config,
+              logger,
+              typeof data === "undefined"
+                ? undefined
+                : { body: { csrfToken: await getCsrfToken(config), data } }
+            )
+            // setLoading(false)
+            if (newSession) {
+              setConfigs(
+                configs.map(
+                  ({
+                    name,
+                    ...rest
+                  }) => {
+                    if (name === config.name) {
+                      return {
+                        name,
+                        ...rest,
+                      }
+                    }
+                    return {
+                      name,
+                      ...rest,
+                      _session: newSession,
+                    }
+                  }
+                )
+              )
+              broadcast().postMessage({
+                event: "session",
+                data: { trigger: "getSession" },
+              })
+            }
+            return newSession
+          },
+        }),
+        [_session, loading],
+      )
+  )
+
+  return (
+    // @ts-expect-error
+    <SessionsContext.Provider value={value}>{children}</SessionsContext.Provider>
+  )
+}
+
+/**
+ * React Hook that gives you access to the logged in user's session data and lets you modify it.
+ *
+ * :::info
+ * You will likely not need `useSession` if you are using the [Next.js App Router (`app/`)](https://nextjs.org/blog/next-13-4#nextjs-app-router).
+ * :::
+ */
+export function useSessions<R extends boolean>(
+  options?: UseSessionOptions<R>
+): SessionsContextValue<R>[] {
+  if (!SessionsContext) {
+    throw new Error("React Context is unavailable in Server Components")
+  }
+
+  // @ts-expect-error Satisfy TS if branch on line below
+  const values: SessionContextValue<R>[] = React.useContext(SessionsContext);//.map((f) => { console.log(f) || f() })
+  if (!values && process.env.NODE_ENV !== "production") {
+    throw new Error(
+      "[next-auth]: `useSession` must be wrapped in a <SessionProvider />"
+    )
+  }
+  return values.map(
+    ({
+      config,
+      ...rest
+    }) => rest
+  );
+
+
 }

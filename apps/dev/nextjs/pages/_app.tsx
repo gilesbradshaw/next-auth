@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }) {
         <Component {...pageProps} />
         <Footer />
       </SessionProvider>
-      <SessionProvider  basePath="/auth-2">
+      <SessionProvider basePath="/auth-2">
         <PagesHeader />
         <Component {...pageProps} />
         <Footer />
@@ -25,17 +25,28 @@ function PagesHeader() {
   const { signIn, config, signOut, data: session } = useSession()
   return (
     <Header
-      sessions={[{
-        session,
-        signIn: (<button onClick={() => signIn({ config })} className={styles.buttonPrimary}>
-          Sign in
-        </button>),
-        signOut: (<button onClick={() => signOut({ config })} className={styles.buttonPrimary}>
-        Sign out
-      </button>),
-      }]}
+      sessions={[
+        {
+          session,
+          signIn: (
+            <button
+              onClick={() => signIn({ config })}
+              className={styles.buttonPrimary}
+            >
+              Sign in
+            </button>
+          ),
+          signOut: (
+            <button
+              onClick={() => signOut({ config })}
+              className={styles.buttonPrimary}
+            >
+              Sign out
+            </button>
+          ),
+        },
+      ]}
       sign={(func) => () => func()}
-      
     />
   )
 }

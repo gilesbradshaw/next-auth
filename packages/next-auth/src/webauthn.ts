@@ -66,7 +66,7 @@ async function webAuthnOptions(
 export const signIn: SignIn = async (
   options,
   provider,
-  authorizationParams,
+  authorizationParams
 ) => {
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
 

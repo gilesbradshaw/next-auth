@@ -264,3 +264,36 @@ export function parseUrl(url?: string): {
     toString: () => base,
   }
 }
+
+
+/**
+ 
+ * If you have session expiry times of 30 days (the default) or more, then you probably don't need to change any of the default options.
+ *
+ * However, if you need to customize the session behavior and/or are using short session expiry times, you can pass options to the provider to customize the behavior of the {@link useSession} hook.
+ */
+export interface SessionsProviderProps {
+  children: React.ReactNode
+  sessions: {
+    session?: Session | null
+    baseUrl?: string
+    basePath?: string
+    name?: string
+  }[],
+  /**
+   * A time interval (in seconds) after which the session will be re-fetched.
+   * If set to `0` (default), the session is not polled.
+   */
+  refetchInterval?: number
+  /**
+   * `SessionProvider` automatically refetches the session when the user switches between windows.
+   * This option activates this behaviour if set to `true` (default).
+   */
+  refetchOnWindowFocus?: boolean
+  /**
+   * Set to `false` to stop polling when the device has no internet access offline (determined by `navigator.onLine`)
+   *
+   * [`navigator.onLine` documentation](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorOnLine/onLine)
+   */
+  refetchWhenOffline?: false
+}

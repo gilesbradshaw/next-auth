@@ -1,14 +1,13 @@
-
 import NextAuth from "next-auth"
-import { auth } from 'auth' ;
-import { auth as auth2 } from 'auth-2' ;
-import { createMiddleware } from 'next-easy-middlewares';
+import { auth } from "auth"
+import { auth as auth2 } from "auth-2"
+import { createMiddleware } from "next-easy-middlewares"
 
 const middleware = {
   auth,
-  auth2
-};
-export default createMiddleware(middleware);
+  auth2,
+}
+export default createMiddleware(middleware)
 
 //import authConfig from "./auth.config"
 //export const { auth: middleware } = NextAuth(authConfig)
