@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation"
 
 export default function Client() {
   const { data: session, signIn, signOut, update, status } = useSession()
-  const b = useSessions();
+  const b = useSessions()
   const router = useRouter()
   return (
     <div className="card">
-      <pre>{JSON.stringify({b}, null, 2)}</pre>
+      <pre>{JSON.stringify({ b }, null, 2)}</pre>
       <div className="card-header">
         <h3>Client Component</h3>
       </div>

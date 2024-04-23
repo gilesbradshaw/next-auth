@@ -43,12 +43,12 @@ export default async function Page() {
        NOTE: The `auth()` result is not run through the `session` callback, be careful passing down data
        to a client component, this will be exposed via the /api/auth/session endpoint
       */}
-      <SessionsProvider sessions={
-        [
-          { name: 'auth', basePath: "/auth", session },
-          { name: 'auth-2', basePath: "/auth-2", session: session2 }
-        ]
-      }>
+      <SessionsProvider
+        sessions={[
+          { name: "auth", basePath: "/auth", session },
+          { name: "auth-2", basePath: "/auth-2", session: session2 },
+        ]}
+      >
         <SessionProvider basePath="/auth">
           <Client />
         </SessionProvider>

@@ -265,7 +265,6 @@ export function parseUrl(url?: string): {
   }
 }
 
-
 /**
  
  * If you have session expiry times of 30 days (the default) or more, then you probably don't need to change any of the default options.
@@ -279,7 +278,7 @@ export interface SessionsProviderProps {
     baseUrl?: string
     basePath?: string
     name?: string
-  }[],
+  }[]
   /**
    * A time interval (in seconds) after which the session will be re-fetched.
    * If set to `0` (default), the session is not polled.
