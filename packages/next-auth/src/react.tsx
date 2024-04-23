@@ -711,7 +711,6 @@ export function SessionsProvider(props: SessionsProviderProps) {
   const value: any[] = configs.map(({ _session, loading, ...config }) =>
     React.useMemo(
       () => ({
-        config,
         name: config.name,
         data: _session,
         status: loading
@@ -785,11 +784,11 @@ export function useSessions<R extends boolean>(
   }
 
   // @ts-expect-error Satisfy TS if branch on line below
-  const values: SessionContextValue<R>[] = React.useContext(SessionsContext) //.map((f) => { console.log(f) || f() })
+  const values: SessionsContextValue<R>[] = React.useContext(SessionsContext) //.map((f) => { console.log(f) || f() })
   if (!values && process.env.NODE_ENV !== "production") {
     throw new Error(
       "[next-auth]: `useSession` must be wrapped in a <SessionProvider />"
     )
   }
-  return values.map(({ config, ...rest }) => rest)
+  return values
 }
