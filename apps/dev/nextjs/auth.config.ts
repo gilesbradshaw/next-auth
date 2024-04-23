@@ -38,7 +38,7 @@ export default {
     }),
     GitHub,
     Google,
-    Keycloak,
+    // Keycloak,
     Facebook,
     Twitter,
   ].filter(Boolean) as NextAuthConfig["providers"],
