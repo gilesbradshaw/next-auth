@@ -15,7 +15,9 @@ import type {
   SignInOptions,
   SignInResponse,
   SignIn,
+  SignInInternal,
   SignOut,
+  SignOutInternal,
 } from "./lib/client.js"
 
 const logger: LoggerInstance = {
@@ -63,9 +65,9 @@ async function webAuthnOptions(
  * Initiate a signin flow or send the user to the signin page listing all possible providers.
  * Handles CSRF protection.
  */
-export const signIn: SignIn = async (
-  options,
+export const signIn: SignInInternal = async (
   provider,
+  options,
   authorizationParams
 ) => {
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}

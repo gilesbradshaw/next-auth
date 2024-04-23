@@ -82,11 +82,10 @@ export default (name: string, basePath: string) =>
       Twitter,
     ].filter(Boolean) as NextAuthConfig["providers"],
     callbacks: {
-      jwt({ token, trigger, session, account, ...rest }) {
-        console.log("jwt call back ", trigger, name, basePath)
-
+      jwt({ token, trigger, session, account }) {
         if (trigger === "signIn") {
           token.access_token = account?.access_token
+          token.refresh_token = account?.refresh_token
           token.provider = account?.provider
           // console.log('jwt', { token, trigger, session, account, rest})
         }

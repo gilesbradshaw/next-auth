@@ -30,10 +30,12 @@ import type {
   LiteralUnion,
   SessionProviderProps,
   SessionsProviderProps,
+  SignInInternal,
   SignIn,
   SignInAuthorizationParams,
   SignInOptions,
   SignInResponse,
+  SignOutInternal,
   SignOut,
   SignOutParams,
   SignOutResponse,
@@ -44,9 +46,11 @@ import type {
 export type {
   LiteralUnion,
   SignIn,
+  SignInInternal,
   SignInOptions,
   SignInAuthorizationParams,
   SignOut,
+  SignOutInternal,
   SignOutParams,
   SignInResponse,
   SignOutResponse,
@@ -243,22 +247,22 @@ export async function getProviders(config: AuthClientConfig) {
 
 const sin =
   (config: AuthClientConfig): SignIn =>
-  (options, provider, authorizationParams) =>
+  (provider = "", options, authorizationParams) =>
     signIn(
+      provider,
       {
         ...options,
         config,
       },
-      provider,
       authorizationParams
     )
 /**
  * Initiate a signin flow or send the user to the signin page listing all possible providers.
  * Handles CSRF protection.
  */
-export const signIn: SignIn = async (
+const signIn: SignInInternal = async (
+  provider = "",
   options,
-  provider,
   authorizationParams
 ) => {
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
@@ -304,7 +308,6 @@ export const signIn: SignIn = async (
   )
 
   const data = await res.json()
-
   // TODO: Do not redirect for Credentials and Email providers by default in next major
   if (redirect || !isSupportingReturn) {
     const url = data.url ?? callbackUrl
@@ -340,7 +343,7 @@ const sout =
  * Initiate a signout, by destroying the current session.
  * Handles CSRF protection.
  */
-export const signOut: SignOut = async (options) => {
+const signOut: SignOutInternal = async (options) => {
   const { callbackUrl = window.location.href } = options ?? {}
 
   const baseUrl = apiBaseUrl(options.config)

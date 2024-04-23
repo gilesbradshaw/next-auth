@@ -57,7 +57,7 @@ export interface SignInOptions extends Record<string, unknown> {
   callbackUrl?: string
   /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option) */
   redirect?: boolean
-  config?: AuthClientConfig
+  config: AuthClientConfig
 }
 
 export interface SignInResponse {
@@ -67,22 +67,40 @@ export interface SignInResponse {
   url: string | null
 }
 
-export type SignIn = <
+export type SignInInternal = <
   P extends RedirectableProviderType | undefined = undefined,
 >(
-  options: SignInOptions,
-  provider?: LiteralUnion<
+  provider: LiteralUnion<
     P extends RedirectableProviderType
       ? P | BuiltInProviderType
       : BuiltInProviderType
   >,
+  options: SignInOptions,
   authorizationParams?: SignInAuthorizationParams
 ) => Promise<
   P extends RedirectableProviderType ? SignInResponse | undefined : undefined
 >
 
-export type SignOut = <R extends boolean = true>(
+export type SignIn = <
+  P extends RedirectableProviderType | undefined = undefined,
+>(
+  provider?: LiteralUnion<
+    P extends RedirectableProviderType
+      ? P | BuiltInProviderType
+      : BuiltInProviderType
+  >,
+  options?: Omit<SignInOptions, "config">,
+  authorizationParams?: SignInAuthorizationParams
+) => Promise<
+  P extends RedirectableProviderType ? SignInResponse | undefined : undefined
+>
+
+export type SignOutInternal = <R extends boolean = true>(
   options: SignOutParams<R>
+) => Promise<R extends true ? undefined : SignOutResponse>
+
+export type SignOut = <R extends boolean = true>(
+  options?: SignOutParams<R>
 ) => Promise<R extends true ? undefined : SignOutResponse>
 
 /**
@@ -105,7 +123,7 @@ export interface SignOutParams<R extends boolean = true> {
   callbackUrl?: string
   /** [Documentation](https://next-auth.js.org/getting-started/client#using-the-redirect-false-option-1 */
   redirect?: R
-  config?: AuthClientConfig
+  config: AuthClientConfig
 }
 
 /**

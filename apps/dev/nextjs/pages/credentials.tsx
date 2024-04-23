@@ -36,7 +36,7 @@ export default function Page() {
       <h1>Test different flows for Credentials login</h1>
       <span className="spacing">Default: </span>
       <button
-        onClick={() => signIn({ config, password: "password" }, "credentials")}
+        onClick={() => signIn("credentials", { config, password: "password" })}
       >
         Login
       </button>
@@ -44,10 +44,11 @@ export default function Page() {
       <span className="spacing">No redirect: </span>
       <button
         onClick={() =>
-          signIn(
-            { config, redirect: false, password: "password" },
-            "credentials"
-          ).then(setResponse)
+          signIn("credentials", {
+            config,
+            redirect: false,
+            password: "password",
+          }).then(setResponse)
         }
       >
         Login

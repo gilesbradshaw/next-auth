@@ -25,16 +25,17 @@ export default function Client() {
               Update: {name}
             </button>
           )}
-          {data && (
-            <button onClick={() => signOut({})}>Sign out: {name}</button>
-          )}
+          {data && <button onClick={() => signOut()}>Sign out: {name}</button>}
           {!data && (
             <>
-              <button onClick={() => signIn({}, "facebook")}>
+              <button onClick={() => signIn("facebook")}>
                 Sign in facebook: {name}
               </button>
+              <button onClick={() => signIn("google")}>
+                Sign in google: {name}
+              </button>
               <button
-                onClick={() => signIn({ password: "password" }, "credentials")}
+                onClick={() => signIn("credentials", { password: "password" })}
               >
                 Sign in Credentials: {name}
               </button>
@@ -63,17 +64,15 @@ export default function Client() {
               >
                 Update Session - New Name
               </button>
-              <button onClick={() => signOut({})}>Sign out</button>
+              <button onClick={() => signOut()}>Sign out</button>
             </>
           ) : (
             <>
-              <button onClick={() => signIn({}, "facebook")}>
+              <button onClick={() => signIn("facebook")}>
                 Sign in Facebook
               </button>
-              <button onClick={() => signIn({}, "github")}>
-                Sign in Github
-              </button>
-              <button onClick={() => signIn({}, "credentials", {})}>
+              <button onClick={() => signIn("github")}>Sign in Github</button>
+              <button onClick={() => signIn("credentials")}>
                 Sign in Credentials
               </button>
             </>
