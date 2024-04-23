@@ -49,10 +49,10 @@ export default async function Page() {
           { name: "auth-2", basePath: "/auth-2", session: session2 },
         ]}
       >
-        <SessionProvider basePath="/auth">
+        <SessionProvider session={session} basePath="/auth">
           <Client />
         </SessionProvider>
-        <SessionProvider basePath="/auth-2">
+        <SessionProvider session={session2} basePath="/auth-2">
           <Client />
         </SessionProvider>
       </SessionsProvider>

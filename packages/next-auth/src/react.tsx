@@ -644,12 +644,14 @@ export function SessionsProvider(props: SessionsProviderProps) {
           return {
             ...config,
             _session,
+            loading: false,
           }
         }
         if (p?.event === "poll" && !_session) {
           return {
             ...config,
             _session,
+            loading: false,
           }
         }
         return getSession({
@@ -710,7 +712,6 @@ export function SessionsProvider(props: SessionsProviderProps) {
       return () => clearInterval(refetchIntervalTimer)
     }
   }, [refetchInterval, shouldRefetch])
-
   const value: any[] = configs.map(({ _session, loading, ...config }) =>
     React.useMemo(
       () => ({
