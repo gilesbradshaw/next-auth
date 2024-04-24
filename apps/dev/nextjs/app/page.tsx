@@ -11,10 +11,14 @@ export default async function Page() {
   const session2 = await auth2()
   return (
     <div className="container">
-      <h1>NextAuth.js Example</h1>
+      <h1>NextAuth.js Multi session Example</h1>
       <p>
         This is an example site to demonstrate how to use{" "}
-        <a href="https://nextjs.authjs.dev">NextAuth.js</a> for authentication.
+        <a href="https://nextjs.authjs.dev">NextAuth.js</a> for authentication
+        with multiple sessions.
+        <a href="https://github.com/gilesbradshaw/next-auth/tree/multi-sessions-demo">
+          repo
+        </a>
       </p>
       {/* 
        NOTE: The `auth()` result is not run through the `session` callback, be careful passing down data

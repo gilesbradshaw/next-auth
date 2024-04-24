@@ -8,6 +8,9 @@ export default function Client() {
   const router = useRouter()
   return (
     <div>
+      <h2>
+        You can login, logout and update the below sessions independantly.
+      </h2>
       {sessions.map(({ name, signOut, signIn, update, data, status }) => (
         <div key={name} className="card">
           <div className="card-header">
