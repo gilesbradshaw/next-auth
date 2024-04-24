@@ -27,10 +27,15 @@ export async function AppHeader() {
           action={async () => {
             "use server"
             try {
-              // await signIn()
+              await signIn()
             } catch (error) {
               if (error instanceof AuthError) {
                 console.log(error)
+              }
+              return {
+                success: false,
+                error: error.message,
+                stack: error.stack,
               }
               throw error
             }
