@@ -102,7 +102,9 @@ export async function signIn2(
     config.basePath
   )
   if (shouldRedirect && !provider) {
-    redirect("https://www.bbc.co.uk/news/uk-politics-68887629")
+    redirect(
+      "https://next-auth-nextjs-gold.vercel.app/auth/signin?callbackUrl=https%3A%2F%2Fnext-auth-nextjs-gold.vercel.app%2F"
+    )
   }
 
   if (shouldRedirect) {
