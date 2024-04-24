@@ -27,13 +27,14 @@ export async function AppHeader() {
           action={async () => {
             "use server"
             try {
-              await signIn()
+              // await signIn()
             } catch (error) {
               if (error instanceof AuthError) {
                 console.log(error)
               }
               throw error
             }
+            return { success: true }
           }}
         >
           <button className={styles.buttonPrimary}>Sign in</button>
