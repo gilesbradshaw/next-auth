@@ -433,6 +433,7 @@ export default function NextAuth(
   }
   setEnvDefaults(config)
   const httpHandler = (req: NextRequest) => Auth(reqWithEnvURL(req), config)
+  console.log("returning signin2")
   return {
     handlers: { GET: httpHandler, POST: httpHandler } as const,
     // @ts-expect-error

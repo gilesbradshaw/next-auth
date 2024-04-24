@@ -33,8 +33,9 @@ import authConfig from "auth.config"
 //   }
 // )
 
-export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
-  // adapter: PrismaAdapter(globalThis.prisma),
-  session: { strategy: "jwt" },
-  ...authConfig,
-})
+export const { handlers, auth, signIn, signIn2, signOut, unstable_update } =
+  NextAuth({
+    // adapter: PrismaAdapter(globalThis.prisma),
+    session: { strategy: "jwt" },
+    ...authConfig,
+  })
