@@ -91,9 +91,6 @@ export async function signIn2(
     redirectTo,
     ...rest
   } = options instanceof FormData ? Object.fromEntries(options) : options
-  if (shouldRedirect) {
-    redirect("https://news.bbc.co.uk")
-  }
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
   console.log("basePath!", config.basePath)
   const signInURL = createActionURL(
@@ -104,6 +101,13 @@ export async function signIn2(
     process.env,
     config.basePath
   )
+  if (shouldRedirect && !provider) {
+    redirect("https://www.bbc.co.uk/news/uk-politics-68887629")
+  }
+
+  if (shouldRedirect) {
+    redirect("https://news.bbc.co.uk")
+  }
 
   if (!provider) {
     signInURL.searchParams.append("callbackUrl", callbackUrl)
