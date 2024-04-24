@@ -26,8 +26,9 @@ export async function AppHeader() {
         <form
           action={async () => {
             "use server"
+            await signIn()
             try {
-              await signIn()
+              
             } catch (error) {
               if (error instanceof AuthError) {
                 console.log(error)
