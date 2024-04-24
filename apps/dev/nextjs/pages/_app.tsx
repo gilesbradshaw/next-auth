@@ -5,6 +5,7 @@ import styles from "components/header.module.css"
 import Footer from "components/footer"
 
 export default function App({ Component, pageProps }) {
+  console.log("where does this log? Client!")
   return (
     <>
       <SessionProvider basePath="/auth">

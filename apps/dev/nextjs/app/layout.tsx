@@ -12,6 +12,7 @@ import "./styles.css"
 import { AuthError } from "next-auth"
 
 export default function RootLayout(props: { children: React.ReactNode }) {
+  console.log("where does this log? Server!")
   return (
     <html>
       <body>
