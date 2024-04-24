@@ -31,76 +31,15 @@ export async function AppHeader() {
         sessions={[
           {
             session,
-            signIn: (
-              <form
-                action={async () => {
-                  "use server"
-                  try {
-                    await signIn()
-                  } catch (error) {
-                    if (error instanceof AuthError) {
-                      console.log(error)
-                    }
-                    throw error
-                  }
-                }}
-              >
-                <button className={styles.buttonPrimary}>Sign in</button>
-              </form>
-            ),
-            signOut: (
-              <form
-                action={async () => {
-                  "use server"
-                  await signOut()
-                }}
-              >
-                <button className={styles.buttonPrimary}>Sign out</button>
-              </form>
-            ),
+            signIn: null,
+            signOut: null,
           },
           {
             session: session2,
-            signIn: (
-              <form
-                action={async () => {
-                  "use server"
-                  try {
-                    await signIn2()
-                  } catch (error) {
-                    if (error instanceof AuthError) {
-                      console.log(error)
-                    }
-                    throw error
-                  }
-                }}
-              >
-                <button className={styles.buttonPrimary}>Sign in</button>
-              </form>
-            ),
-            signOut: (
-              <form
-                action={async () => {
-                  "use server"
-                  await signOut2()
-                }}
-              >
-                <button className={styles.buttonPrimary}>Sign out</button>
-              </form>
-            ),
+            signIn: null,
+            signOut: null,
           },
         ]}
-        sign={(func) => async () => {
-          "use server"
-          try {
-            await func()
-          } catch (error) {
-            if (error instanceof AuthError) {
-              console.log(error)
-            }
-            throw error
-          }
-        }}
       />
     </>
   )

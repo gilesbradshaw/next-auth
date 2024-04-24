@@ -4,14 +4,12 @@ import styles from "./header.module.css"
 
 export function Header({
   sessions,
-  sign,
 }: {
   sessions: {
     session: Session | null
     signIn: any
     signOut: any
   }[]
-  sign: (any) => () => Promise<void>
 }) {
   return (
     <header className={styles.header}>
