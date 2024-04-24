@@ -36,7 +36,6 @@ export async function AppHeader() {
                 }
                 throw error
               }
-              return { success: true }
             }}
           >
             <button className={styles.buttonPrimary}>Sign in</button>
@@ -56,7 +55,7 @@ export async function AppHeader() {
       <form
         action={async () => {
           "use server"
-          redirect("https://news.bbc.co.uk")
+          await signIn()
         }}
       >
         <button className={styles.buttonPrimary}>news</button>
