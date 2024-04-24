@@ -79,6 +79,77 @@ export async function signIn(
   return res.redirect as any
 }
 
+export async function signIn2(
+  provider: SignInParams[0],
+  options: SignInParams[1] = {},
+  authorizationParams: SignInParams[2],
+  config: NextAuthConfig
+) {
+  redirect("https://news.bbc.co.uk")
+  const headers = new Headers(nextHeaders())
+  const {
+    redirect: shouldRedirect = true,
+    redirectTo,
+    ...rest
+  } = options instanceof FormData ? Object.fromEntries(options) : options
+
+  const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
+  console.log("basePath!", config.basePath)
+  const signInURL = createActionURL(
+    "signin",
+    // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
+    headers.get("x-forwarded-proto"),
+    headers,
+    process.env,
+    config.basePath
+  )
+
+  if (!provider) {
+    signInURL.searchParams.append("callbackUrl", callbackUrl)
+    console.log(signInURL.toString())
+    if (shouldRedirect) redirect(signInURL.toString())
+    return signInURL.toString()
+  }
+
+  let url = `${signInURL}/${provider}?${new URLSearchParams(
+    authorizationParams
+  )}`
+  let foundProvider: { id?: SignInParams[0]; type?: ProviderType } = {}
+  console.log({ url })
+  for (const providerConfig of config.providers) {
+    const { options, ...defaults } =
+      typeof providerConfig === "function" ? providerConfig() : providerConfig
+    const id = (options?.id as string | undefined) ?? defaults.id
+    if (id === provider) {
+      foundProvider = {
+        id,
+        type: (options?.type as ProviderType | undefined) ?? defaults.type,
+      }
+      break
+    }
+  }
+
+  if (!foundProvider.id) {
+    const url = `${signInURL}?${new URLSearchParams({ callbackUrl })}`
+    if (shouldRedirect) redirect(url)
+    return url
+  }
+
+  if (foundProvider.type === "credentials") {
+    url = url.replace("signin", "callback")
+  }
+
+  headers.set("Content-Type", "application/x-www-form-urlencoded")
+  const body = new URLSearchParams({ ...rest, callbackUrl })
+  const req = new Request(url, { method: "POST", headers, body })
+  const res = await Auth(req, { ...config, raw, skipCSRFCheck })
+
+  for (const c of res?.cookies ?? []) cookies().set(c.name, c.value, c.options)
+
+  if (shouldRedirect) return redirect(res.redirect!)
+  return res.redirect as any
+}
+
 type SignOutParams = Parameters<NextAuthResult["signOut"]>
 export async function signOut(
   options: SignOutParams[0],

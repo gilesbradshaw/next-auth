@@ -70,7 +70,7 @@
 import { Auth } from "@auth/core"
 import { reqWithEnvURL, setEnvDefaults } from "./lib/env.js"
 import { initAuth } from "./lib/index.js"
-import { signIn, signOut, update } from "./lib/actions.js"
+import { signIn, signIn2, signOut, update } from "./lib/actions.js"
 
 import type { Session } from "@auth/core/types"
 import type { BuiltInProviderType } from "@auth/core/providers"
@@ -218,7 +218,12 @@ export interface NextAuthResult {
    * ```ts title="pages/protected-ssr.ts"
    * import { auth } from "../auth"
    *
-   * export const getServerSideProps: GetServerSideProps = async (context) => {
+   * export const getSsignIn: (provider, options, authorizationParams) => {
+        const _config = config(undefined)
+        setEnvDefaults(_config)
+        return signIn(provider, options, authorizationParams, _config)
+      },
+      erverSideProps: GetServerSideProps = async (context) => {
    *   const session = await auth(context)
    *
    *   if (session) {
@@ -287,6 +292,27 @@ export interface NextAuthResult {
    *
    */
   signIn: <
+    P extends BuiltInProviderType | (string & {}),
+    R extends boolean = true,
+  >(
+    /** Provider to sign in to */
+    provider?: P, // See: https://github.com/microsoft/TypeScript/issues/29729
+    options?:
+      | FormData
+      | ({
+          /** The URL to redirect to after signing in. By default, the user is redirected to the current page. */
+          redirectTo?: string
+          /** If set to `false`, the `signIn` method will return the URL to redirect to instead of redirecting automatically. */
+          redirect?: R
+        } & Record<string, any>),
+    authorizationParams?:
+      | string[][]
+      | Record<string, string>
+      | string
+      | URLSearchParams
+  ) => Promise<R extends false ? any : never>
+
+  signIn2: <
     P extends BuiltInProviderType | (string & {}),
     R extends boolean = true,
   >(
@@ -382,6 +408,11 @@ export default function NextAuth(
       handlers: { GET: httpHandler, POST: httpHandler } as const,
       // @ts-expect-error
       auth: initAuth(config, (c) => setEnvDefaults(c)),
+      signIn2: (provider, options, authorizationParams) => {
+        const _config = config(undefined)
+        setEnvDefaults(_config)
+        return signIn2(provider, options, authorizationParams, _config)
+      },
 
       signIn: (provider, options, authorizationParams) => {
         const _config = config(undefined)

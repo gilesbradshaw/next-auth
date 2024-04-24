@@ -1,4 +1,4 @@
-import { auth, signIn, signOut, unstable_update as update } from "auth"
+import { auth, signIn, signIn2, signOut, unstable_update as update } from "auth"
 import Footer from "components/footer"
 import { Header } from "components/header"
 import styles from "components/header.module.css"
@@ -55,7 +55,7 @@ export async function AppHeader() {
       <form
         action={async () => {
           "use server"
-          await signIn()
+          await signIn2()
         }}
       >
         <button className={styles.buttonPrimary}>news</button>
