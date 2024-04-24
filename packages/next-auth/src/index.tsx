@@ -440,6 +440,9 @@ export default function NextAuth(
     signIn: (provider, options, authorizationParams) => {
       return signIn(provider, options, authorizationParams, config)
     },
+    signIn2: (provider, options, authorizationParams) => {
+      return signIn2(provider, options, authorizationParams, config)
+    },
     signOut: (options) => {
       return signOut(options, config)
     },
