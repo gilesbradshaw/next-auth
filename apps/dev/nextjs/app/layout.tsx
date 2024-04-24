@@ -53,13 +53,13 @@ export async function AppHeader() {
         }
       />
       <form
-        action={async () => {
+        action={async (formData: FormData) => {
           "use server"
-          redirect(
-            "https://next-auth-nextjs-gold.vercel.app/auth/signin?callbackUrl=https%3A%2F%2Fnext-auth-nextjs-gold.vercel.app%2F"
-          )
+          const { link } = Object.fromEntries(formData)
+          redirect(link.toString())
         }}
       >
+        <input type="text" name="link" placeholder="link" />
         <button className={styles.buttonPrimary}>test</button>
       </form>
     </>
