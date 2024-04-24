@@ -55,10 +55,12 @@ export async function AppHeader() {
       <form
         action={async () => {
           "use server"
-          await signIn2()
+          redirect(
+            "https://next-auth-nextjs-gold.vercel.app/auth/signin?callbackUrl=https%3A%2F%2Fnext-auth-nextjs-gold.vercel.app%2F"
+          )
         }}
       >
-        <button className={styles.buttonPrimary}>news</button>
+        <button className={styles.buttonPrimary}>test</button>
       </form>
     </>
   )
