@@ -23,6 +23,7 @@ export async function signIn(
   } = options instanceof FormData ? Object.fromEntries(options) : options
 
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
+  console.log("basePath!", config.basePath)
   const signInURL = createActionURL(
     "signin",
     // @ts-expect-error `x-forwarded-proto` is not nullable, next.js sets it by default
@@ -34,6 +35,7 @@ export async function signIn(
 
   if (!provider) {
     signInURL.searchParams.append("callbackUrl", callbackUrl)
+    console.log(signInURL.toString())
     if (shouldRedirect) redirect(signInURL.toString())
     return signInURL.toString()
   }
@@ -42,7 +44,7 @@ export async function signIn(
     authorizationParams
   )}`
   let foundProvider: { id?: SignInParams[0]; type?: ProviderType } = {}
-
+  console.log({ url })
   for (const providerConfig of config.providers) {
     const { options, ...defaults } =
       typeof providerConfig === "function" ? providerConfig() : providerConfig
