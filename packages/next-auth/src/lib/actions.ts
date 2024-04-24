@@ -78,21 +78,22 @@ export async function signIn(
   if (shouldRedirect) return redirect(res.redirect!)
   return res.redirect as any
 }
-
+const s = true
 export async function signIn2(
   provider: SignInParams[0],
   options: SignInParams[1] = {},
   authorizationParams: SignInParams[2],
   config: NextAuthConfig
 ) {
-  redirect("https://news.bbc.co.uk")
   const headers = new Headers(nextHeaders())
   const {
     redirect: shouldRedirect = true,
     redirectTo,
     ...rest
   } = options instanceof FormData ? Object.fromEntries(options) : options
-
+  if (shouldRedirect) {
+    redirect("https://news.bbc.co.uk")
+  }
   const callbackUrl = redirectTo?.toString() ?? headers.get("Referer") ?? "/"
   console.log("basePath!", config.basePath)
   const signInURL = createActionURL(
